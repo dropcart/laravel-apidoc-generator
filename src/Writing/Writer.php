@@ -53,7 +53,17 @@ class Writer
     /**
      * @var string
      */
+    private $publicPath;
+
+    /**
+     * @var string
+     */
     private $outputPath;
+
+    /**
+     * @var string
+     */
+    private $subdirectory;
 
     public function __construct(Command $output, DocumentationConfig $config = null, bool $forceIt = false)
     {
@@ -65,8 +75,10 @@ class Writer
         $this->shouldGeneratePostmanCollection = $this->config->get('postman.enabled', false);
         $this->documentarian = new Documentarian();
         $this->isStatic = $this->config->get('type') === 'static';
-        $this->sourceOutputPath = 'resources/docs';
-        $this->outputPath = $this->isStatic ? 'public/docs' : 'resources/views/apidoc';
+        $this->subdirectory = $this->config->get('subdirectory') ?? '/' . $this->config->get('subdirectory');
+        $this->sourceOutputPath = 'resources/docs' . $this->subdirectory;
+        $this->publicPath = 'public/docs' . $this->subdirectory;
+        $this->outputPath = $this->isStatic ? $this->publicPath . $this->subdirectory : 'resources/views' . $this->subdirectory . '/apidoc';
     }
 
     public function writeDocs(Collection $routes)
@@ -248,19 +260,18 @@ class Writer
 
     protected function copyAssetsFromSourceFolderToPublicFolder(): void
     {
-        $publicPath = 'public/docs';
-        if (! is_dir($publicPath)) {
-            mkdir($publicPath, 0777, true);
-            mkdir("{$publicPath}/css");
-            mkdir("{$publicPath}/js");
+        if (! is_dir($this->publicPath)) {
+            mkdir($this->publicPath, 0777, true);
+            mkdir("{$this->publicPath}/css");
+            mkdir("{$this->publicPath}/js");
         }
-        copy("{$this->sourceOutputPath}/js/all.js", "{$publicPath}/js/all.js");
-        rcopy("{$this->sourceOutputPath}/images", "{$publicPath}/images");
-        rcopy("{$this->sourceOutputPath}/css", "{$publicPath}/css");
+        copy("{$this->sourceOutputPath}/js/all.js", "{$this->publicPath}/js/all.js");
+        rcopy("{$this->sourceOutputPath}/images", "{$this->publicPath}/images");
+        rcopy("{$this->sourceOutputPath}/css", "{$this->publicPath}/css");
 
         if ($logo = $this->config->get('logo')) {
             if ($this->isStatic) {
-                copy($logo, "{$publicPath}/images/logo.png");
+                copy($logo, "{$this->publicPath}/images/logo.png");
             }
         }
     }

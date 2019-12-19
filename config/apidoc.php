@@ -2,6 +2,13 @@
 
 return [
     /*
+     * Decides whether the API docs should be split into multiple docs/endpoints.
+     * The config per subdirectory should be provided in the apidoc_split.php config.
+     */
+    'split_docs' => false,
+    'api_groups' => include __DIR__ . '/apidoc_groups.php',
+
+    /*
      * The type of documentation output to generate.
      * - "static" will generate a static HTMl page in the /public/docs folder,
      * - "laravel" will generate the documentation as a Blade view,

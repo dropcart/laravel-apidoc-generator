@@ -15,4 +15,9 @@ class DocumentationConfig
     {
         return data_get($this->data, $key, $default);
     }
+
+    public function set($key, $value)
+    {
+        return data_set($this->data, $key, $value);
+    }
 }

@@ -25,6 +25,10 @@ class ApiDocGeneratorServiceProvider extends ServiceProvider
             __DIR__.'/../config/apidoc.php' => app()->basePath().'/config/apidoc.php',
         ], 'apidoc-config');
 
+        $this->publishes([
+            __DIR__.'/../config/apidoc_groups.php' => app()->basePath().'/config/apidoc_groups.php',
+        ], 'apidoc-split-config');
+
         $this->mergeConfigFrom(__DIR__.'/../config/apidoc.php', 'apidoc');
 
         if ($this->app->runningInConsole()) {

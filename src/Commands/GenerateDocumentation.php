@@ -65,6 +65,26 @@ class GenerateDocumentation extends Command
 
         URL::forceRootUrl($this->baseUrl);
 
+        if (
+            $this->docConfig->get('split_docs') === true
+            &&
+            count($this->docConfig->get('api_groups')) > 0
+        ) {
+            // Generate docs per API group
+            foreach ($this->docConfig->get('api_groups') as $apiGroupConfig) {
+                $this->docConfig->set('subdirectory', $apiGroupConfig['subdirectory']);
+                $this->docConfig->set('routes', $apiGroupConfig['routes']);
+                // Generate docs for group
+                $this->generateDocs();
+            }
+        } else {
+            // Generate docs the regular way
+            $this->generateDocs();
+        }
+    }
+
+    private function generateDocs()
+    {
         $routeMatcher = new RouteMatcher($this->docConfig->get('routes'), $this->docConfig->get('router'));
         $routes = $routeMatcher->getRoutes();
 
