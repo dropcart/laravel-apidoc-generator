@@ -14,15 +14,6 @@ class RebuildDocumentation extends Command
 
     public function handle()
     {
-        $sourceOutputPath = 'resources/docs/source';
-        if (! is_dir($sourceOutputPath)) {
-            $this->error('There is no existing documentation available at '.$sourceOutputPath.'.');
-
-            return false;
-        }
-
-        $this->info('Rebuilding API documentation from '.$sourceOutputPath.'/index.md');
-
         $config = new DocumentationConfig(config('apidoc'));
 
         if (
@@ -45,6 +36,15 @@ class RebuildDocumentation extends Command
 
     private function writeDocs(DocumentationConfig $config)
     {
+        $sourceOutputPath = 'resources/docs/' . ($config->get('subdirectory') !== null ? $config->get('subdirectory') . '/' : '') . 'source';
+        if (! is_dir($sourceOutputPath)) {
+            $this->error('There is no existing documentation available at '.$sourceOutputPath.'.');
+
+            return false;
+        }
+
+        $this->info('Rebuilding API documentation from '.$sourceOutputPath.'/index.md');
+
         $writer = new Writer($this, $config);
         $writer->writeHtmlDocs();
     }
