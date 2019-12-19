@@ -75,7 +75,7 @@ class Writer
         $this->shouldGeneratePostmanCollection = $this->config->get('postman.enabled', false);
         $this->documentarian = new Documentarian();
         $this->isStatic = $this->config->get('type') === 'static';
-        $this->subdirectory = $this->config->get('subdirectory') !== null ?? '/' . $this->config->get('subdirectory');
+        $this->subdirectory = $this->config->get('subdirectory') !== null ? '/' . $this->config->get('subdirectory') : '';
         $this->sourceOutputPath = 'resources/docs' . $this->subdirectory;
         $this->publicPath = 'public/docs' . $this->subdirectory;
         $this->outputPath = $this->isStatic ? $this->publicPath : 'resources/views' . $this->subdirectory . '/apidoc';
