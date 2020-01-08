@@ -34,11 +34,28 @@ trait ParamHelpers
             'object' => function () {
                 return new \stdClass;
             },
+            'iso8601' => function () use ($faker) {
+                return $faker->iso8601();
+            },
+            'iso8601date' => function () use ($faker) {
+                return $faker->date();
+            },
+            'iso8601time' => function () use ($faker) {
+                return $faker->time();
+            },
+            'mimetype' => function () use ($faker) {
+                return $faker->mimeType;
+            },
         ];
+
+        $isArray = substr($type, -2) === '[]';
+        if ($isArray) {
+            $type = substr($type, 0, -2);
+        }
 
         $fakeFactory = $fakeFactories[$type] ?? $fakeFactories['string'];
 
-        return $fakeFactory();
+        return $isArray ? [$fakeFactory()] : $fakeFactory();
     }
 
     /**
@@ -59,6 +76,8 @@ trait ParamHelpers
             'double' => 'floatval',
             'boolean' => 'boolval',
             'bool' => 'boolval',
+            'array' => function ($value) { return json_decode($value); },
+            'object' => function ($value) { return json_decode($value); },
         ];
 
         // First, we handle booleans. We can't use a regular cast,
