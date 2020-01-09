@@ -11,11 +11,14 @@ use Mpociot\ApiDoc\Extracting\Strategies\Strategy;
 use Mpociot\Reflection\DocBlock;
 use Mpociot\Reflection\DocBlock\Tag;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 class GetFromBodyParamTag extends Strategy
 {
     use ParamHelpers;
+
+    protected $tagName = 'bodyParam';
 
     public function __invoke(Route $route, ReflectionClass $controller, ReflectionMethod $method, array $routeRules, array $context = [])
     {
@@ -29,7 +32,7 @@ class GetFromBodyParamTag extends Strategy
 
             try {
                 $parameterClass = new ReflectionClass($parameterClassName);
-            } catch (\ReflectionException $e) {
+            } catch (ReflectionException $e) {
                 continue;
             }
 
@@ -51,11 +54,11 @@ class GetFromBodyParamTag extends Strategy
         return $this->getBodyParametersFromDocBlock($methodDocBlock->getTags());
     }
 
-    private function getBodyParametersFromDocBlock($tags)
+    protected function getBodyParametersFromDocBlock($tags)
     {
         $parameters = collect($tags)
             ->filter(function ($tag) {
-                return $tag instanceof Tag && $tag->getName() === 'bodyParam';
+                return $tag instanceof Tag && $tag->getName() === $this->tagName;
             })
             ->mapWithKeys(function (Tag $tag) {
                 // Format:

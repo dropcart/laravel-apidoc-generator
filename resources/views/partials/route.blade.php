@@ -35,6 +35,31 @@
 `{{$method}} {{$route['uri']}}`
 
 @endforeach
+
+<?php
+    $sections = [
+        'urlParameters' => 'URL Parameters',
+        'queryParameters' => 'Query Parameters',
+        'bodyParameters' => 'Body Parameters',
+    ];
+?>
+@foreach($sections as $routeKey => $header)
+    @if(count($route[$routeKey]))
+
+#### {{$header}}
+
+<?php $hasType = isset(current($route[$routeKey])['type']); ?>
+
+Parameter | @if($hasType) Type | @endif Status | Description
+--------- | @if($hasType) ------- | @endif ------- | ------- | -----------
+       @foreach($route[$routeKey] as $attribute => $parameter)
+           `{{$attribute}}` | @isset($parameter['type']) {{$parameter['type']}} | @endisset @if($parameter['required']) required @else optional @endif | {!! $parameter['description'] !!}
+       @endforeach
+    @endif
+@endforeach
+
+
+{{--
 @if(count($route['urlParameters']))
 #### URL Parameters
 
@@ -61,5 +86,6 @@ Parameter | Type | Status | Description
     `{{$attribute}}` | {{$parameter['type']}} | @if($parameter['required']) required @else optional @endif | {!! $parameter['description'] !!}
     @endforeach
 @endif
+--}}
 
 <!-- END_{{$route['id']}} -->
