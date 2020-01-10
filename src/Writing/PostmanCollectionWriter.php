@@ -30,7 +30,7 @@ class PostmanCollectionWriter
         $this->baseUrl = $baseUrl;
     }
 
-    public function getCollection()
+    public function getCollection(string $apiName = null)
     {
         URL::forceRootUrl($this->baseUrl);
         if (Str::startsWith($this->baseUrl, 'https://')) {
@@ -40,7 +40,7 @@ class PostmanCollectionWriter
         $collection = [
             'variables' => [],
             'info' => [
-                'name' => config('apidoc.postman.name') ?: config('app.name').' API',
+                'name' => $apiName ?: config('apidoc.postman.name') ?: config('app.name').' API',
                 '_postman_id' => Uuid::uuid4()->toString(),
                 'description' => config('apidoc.postman.description') ?: '',
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json',

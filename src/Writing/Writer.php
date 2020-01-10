@@ -107,6 +107,7 @@ class Writer
         $compareFile = $this->sourceOutputPath.'/source/.compare.md';
 
         $infoText = view('apidoc::partials.info')
+            ->with('apiName', $this->config->get('api_name'))
             ->with('outputPath', 'docs')
             ->with('showPostmanCollectionButton', $this->shouldGeneratePostmanCollection);
 
@@ -115,6 +116,7 @@ class Writer
         $parsedRouteOutput = $this->generateMarkdownOutputForEachRoute($parsedRoutes, $settings);
 
         $frontmatter = view('apidoc::partials.frontmatter')
+            ->with('apiName', $this->config->get('api_name'))
             ->with('settings', $settings);
 
         /*
@@ -237,7 +239,7 @@ class Writer
     {
         $writer = new PostmanCollectionWriter($routes, $this->baseUrl);
 
-        return $writer->getCollection();
+        return $writer->getCollection($this->config->get('api_name'));
     }
 
     protected function getMarkdownToPrepend(): string

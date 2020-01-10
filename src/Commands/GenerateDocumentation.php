@@ -72,6 +72,7 @@ class GenerateDocumentation extends Command
         ) {
             // Generate docs per API group
             foreach ($this->docConfig->get('api_groups') as $apiGroupConfig) {
+                $this->docConfig->set('api_name', $apiGroupConfig['name'] ?? config('app.name'));
                 $this->docConfig->set('subdirectory', $apiGroupConfig['subdirectory']);
                 $this->docConfig->set('routes', $apiGroupConfig['routes']);
                 // Generate docs for group
@@ -110,6 +111,7 @@ class GenerateDocumentation extends Command
      * @param array $routes
      *
      * @return array
+     * @throws ReflectionException
      */
     private function processRoutes(Generator $generator, array $routes)
     {

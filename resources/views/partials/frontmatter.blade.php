@@ -1,4 +1,4 @@
-title: API Reference
+title: {{ $apiName ?: 'API Reference' }}
 
 language_tabs:
 @foreach($settings['languages'] as $language)
